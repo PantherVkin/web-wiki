@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+  </head>
+  <body>
+    <canvas class="ctx" width="600" height="400"></canvas>
+    <script src="./index.js"></script>
+    <script>
+      drawCanvas();
+
+      async function drawCanvas() {
+        let canvasEL = document.querySelector('.ctx');
+        let w = canvasEL.width;
+        let h = canvasEL.height;
+        let ctx = canvasEL.getContext('2d');
+        ctx.clearRect(0, 0, w, h);
+        ctx.beginPath();
+        const imgBg =
+          'https://file.iviewui.com/view-design-dist/img/index-banner.70aa00f3.png' + `?${new Date().getTime()}`;
+
+        await drawImg(ctx, imgBg, 0, 0, 600, 400);
+        let realname = 'DUKE';
+        let contentX = 112;
+        let realNameY = 303;
+        await drawText(ctx, 44, 'bolder', '#f40', realname, realNameY, 172, contentX, `start`);
+        let shareImg = canvasEL.toDataURL('image/jpeg', 1);
+
+        var img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = shareImg;
+        img.onload = function () {
+          console.log('img', img);
+          document.body.appendChild(img);
+        };
+
+        shareImg = shareImg.replace('data:image/jgp;base64,', '');
+        return;
+        const res = await this.commonApi.uploadImg({imageData: shareImg});
+        if (res.code == 1 && res.data) {
+          this.memberStudyApi.updateMyAnnualChickenSoup({
+            year: this.year,
+            new_year_wish: res.data
+          });
+          this.generate = res.data;
+        }
+      }
+    </script>
+  </body>
+</html>
